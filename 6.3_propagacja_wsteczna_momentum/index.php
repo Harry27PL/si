@@ -18,10 +18,6 @@ include 'NeuronSigmoidal.php';
 include 'TrainingData.php';
 include 'functions.php';
 
-const MIN = 0.1;
-const MAX = 5;
-const STEP = 0.2;
-
 set_time_limit(120);
 
 const NUMBERS = [
