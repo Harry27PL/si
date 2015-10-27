@@ -1,0 +1,9 @@
+{
+  "name": "si",
+  "dependencies": {
+    "vis": "*",
+    "underscore": "*",
+    "synaptic": "*"
+  },
+  "private": true
+}
