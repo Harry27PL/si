@@ -1,0 +1,13 @@
+{
+  "name": "si",
+  "dependencies": {
+    "bootstrap": "*",
+    "jquery": "*",
+    "vis": "*",
+    "underscore": "*",
+    "synaptic": "*",
+    "c3": "*",
+    "sketch.js-2": "*"
+  },
+  "private": true
+}

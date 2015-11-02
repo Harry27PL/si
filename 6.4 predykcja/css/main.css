@@ -1,0 +1,13 @@
+.graphs {
+  margin: 20px 0px;
+  overflow: hidden; }
+  .graphs > * {
+    float: left; }
+  .graphs .sketch {
+    background: #f1f1f1;
+    border-radius: 5px 0px 0px 5px; }
+  .graphs .predict {
+    background: #f0ecb3;
+    border-radius: 0px 5px 5px 0px; }
+
+/*# sourceMappingURL=main.css.map */

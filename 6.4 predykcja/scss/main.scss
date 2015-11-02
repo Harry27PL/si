@@ -1,0 +1,18 @@
+.graphs {
+    margin: 20px 0px;
+    overflow: hidden;
+
+    > * {
+        float: left;
+    }
+
+    .sketch {
+        background: #f1f1f1;
+        border-radius: 5px 0px 0px 5px;
+    }
+
+    .predict {
+        background: #f0ecb3;
+        border-radius: 0px 5px 5px 0px;
+    }
+}
