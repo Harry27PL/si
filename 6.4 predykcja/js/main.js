@@ -60,7 +60,7 @@ var net;
 
     function getNetwork()
     {
-        return new Architect.Perceptron(inputNumber, inputNumber * 2 + 1, outputNumber);
+        return new Architect.Perceptron(inputNumber - 1, (inputNumber - 1) * 2 + 1, outputNumber);
     }
 
     function getTrainingSet()
@@ -68,15 +68,17 @@ var net;
         var canvasData = getCanvasData();
         var set = [];
 
-        for (var i = 0; i < canvasData.length - inputNumber - outputNumber; i++) {
+        for (var i = 0; i < canvasData.length - inputNumber - outputNumber - 1; i++) {
             var inputs = [];
             var outputs = [];
 
-            for (var j = 0; j < inputNumber; j++)
-                inputs.push(canvasData[i + j]);
+            for (var j = 0; j < inputNumber; j++) {
+                inputs.push(getDerrivate(canvasData, i + j));
+            }
 
-            for (var j = 0; j < outputNumber; j++)
-                outputs.push(canvasData[i + inputNumber + j]);
+            for (var j = 0; j < outputNumber; j++) {
+                outputs.push(getDerrivate(canvasData, i + inputNumber + j));
+            }
 
             set.push({
                 input: inputs,
@@ -85,6 +87,11 @@ var net;
         }
 
         return set;
+    }
+
+    function getDerrivate(canvasData, i)
+    {
+        return canvasData[i + 1] - canvasData[i];
     }
 
     function getCanvasData()
@@ -100,8 +107,9 @@ var net;
 
             var x = (i / 4) % $sketch.width();
 
-            if (!values[x] && pixel)
-                values[x] = 1 - y / width;
+            if (!values[x] && pixel) {
+                values[x] = 1 - y / height;
+            }
 
             if (!x)
                 y++;
@@ -112,14 +120,34 @@ var net;
 
     function test(net)
     {
-        var input = _.last(getCanvasData(), inputNumber);
+        var canvasData = _.last(getCanvasData(), inputNumber);
+
+        var input = (function(canvasData){
+            var d = [];
+
+            for (var i in canvasData) {
+                var i = parseInt(i);
+                if (i == canvasData.length - 1)
+                    break;
+
+                d.push(getDerrivate(canvasData, i));
+            }
+
+            return d;
+        })(canvasData);
+
         var output = net.activate(input);
 
         var ctx = $predict[0].getContext('2d');
 
+        var previousY = height - _.last(canvasData) * height;
+
         for (var x in output) {
-            var y = height - output[x] * height;
+            console.log(output[x] + ' * '+height+' + '+previousY+' = '+(output[x] * height * height + previousY))
+            var y = previousY - (output[x] * height);
             ctx.fillRect(x, y, 1, 2);
+
+            previousY = y;
         }
     }
 

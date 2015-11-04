@@ -20,7 +20,7 @@
             <div class="col-xs-12">
 
                 <div class="graphs">
-                    <div class="sketch-wrapper" width="200" height="100"></div>
+                    <div class="sketch-wrapper" width="300" height="100"></div>
                     <canvas class="predict"></canvas>
                 </div>
 
