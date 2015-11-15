@@ -2,15 +2,20 @@
 
 class NeuralNetworkLayer
 {
+    /** @var NeuralNetwork*/
+    private $neuralNetwork;
+
     private $neurons;
 
     private $last;
     private $hidden;
 
-    public function __construct($numberOfNeurons, $numberOfData, $isLast, $isHidden)
+    public function __construct(NeuralNetwork $neuralNetwork, $numberOfNeurons, $numberOfData, $isLast, $isHidden)
     {
+        $this->neuralNetwork = $neuralNetwork;
+
         for ($i = 0; $i < $numberOfNeurons; $i++) {
-            $this->neurons[] = new NeuronSigmoidal($numberOfData);
+            $this->neurons[] = new NeuronSigmoidal($this, $numberOfData);
         }
 
         $this->hidden = $isHidden;
@@ -44,6 +49,12 @@ class NeuralNetworkLayer
     function getNeurons()
     {
         return $this->neurons;
+    }
+
+    /** @return NeuralNetwork */
+    function getNeuralNetwork()
+    {
+        return $this->neuralNetwork;
     }
 
 }
