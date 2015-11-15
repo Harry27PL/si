@@ -2,6 +2,8 @@
 
 abstract class Neuron
 {
+    /** @var NeuralNetworkLayer */
+    private $neuralNetworkLayer;
     private $bias = 1;
     private $lastSum;
     private $lastDelta;
@@ -9,24 +11,28 @@ abstract class Neuron
     protected $previousWeights;
     protected $data;
 
-    function __construct($numberOfData)
+    function __construct(NeuralNetworkLayer $neuralNetworkLayer, $numberOfData)
     {
-        $this->randomizeWeights($numberOfData + 1);
+        $this->neuralNetworkLayer = $neuralNetworkLayer;
+
+        $this->weights = range(0, $numberOfData);
+
+        $this->randomizeWeights();
     }
 
-    protected function randomizeWeights($numberOfData)
+    protected function randomizeWeights()
     {
-        for ($y = 0; $y < $numberOfData; $y++) {
-            $this->weights[] = (rand(0, 10) / 10 - 1);
+        $min = $this->getNeuralNetworkLayer()->getNeuralNetwork()->getRangeMin();
+        $max = $this->getNeuralNetworkLayer()->getNeuralNetwork()->getRangeMax();
+
+        foreach ($this->weights as $k => $weight) {
+            $this->weights[$k] = randFloat($min, $max);
         }
     }
 
     public function rerandomizeWeights()
     {
-        foreach ($this->weights as $k => $weight) {
-            $this->weights[$k] = (rand(0, 10) / 10 - 1);
-        }
-
+        $this->randomizeWeights();
         $this->previousWeights = $this->weights;
     }
 
@@ -90,6 +96,12 @@ abstract class Neuron
     function getBias()
     {
         return $this->bias;
+    }
+
+    /** @return NeuralNetworkLayer */
+    function getNeuralNetworkLayer()
+    {
+        return $this->neuralNetworkLayer;
     }
 
     abstract public function calculate($data);

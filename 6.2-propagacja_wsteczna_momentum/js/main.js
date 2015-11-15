@@ -15,8 +15,8 @@ function draw() {
         }
 
         var options = {
-            width: "400px",
-            height: "400px",
+            width: "300px",
+            height: "200px",
             style: "surface",
             showPerspective: true,
             showGrid: true,

@@ -2,11 +2,6 @@
 
 class NeuronSigmoidal extends Neuron
 {
-    function __construct($numberOfData)
-    {
-        parent::__construct($numberOfData);
-    }
-
     public function calculate($data)
     {
         $this->data = $data;

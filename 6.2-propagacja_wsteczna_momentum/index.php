@@ -18,9 +18,11 @@ include 'NeuronSigmoidal.php';
 include 'TrainingData.php';
 include 'functions.php';
 
+set_time_limit(60);
+
 const MIN = 0.1;
 const MAX = 5;
-const STEP = 0.2;
+const STEP = 0.5;
 
 function start()
 {
@@ -43,9 +45,9 @@ function prepareTrainingDatas()
 {
     $result = [];
 
-    for ($i = 0; $i <= 100; $i++) {
-        $x = rand(0, 5000) / 1000 + 0.001;
-        $y = rand(0, 5000) / 1000 + 0.001;
+    for ($i = 0; $i <= 200; $i++) {
+        $x = randFloat(0.1, 5);
+        $y = randFloat(0.1, 5);
 
         $result[] = new TrainingData([$x, $y], [func($x, $y)]);
     }
@@ -103,10 +105,12 @@ function learn(NeuralNetwork $neuralNetwork, array $trainingDatas)
             /*?></td><?php
 
             ?></tr><?php*/
+        }
 
-//            if ($i % 100 == 0) {
-//                test($neuralNetwork);
-//            }
+        if ($i % 10 == 0) {
+            echo $i.', ';
+//            echo 'błąd <strong>'.round(avg($errors), 3).'</strong>';
+//            test($neuralNetwork);
         }
 
         /*?></table><?php*/
@@ -123,22 +127,23 @@ function learn(NeuralNetwork $neuralNetwork, array $trainingDatas)
         $i++;
 
         if ($i > 1) {
-            $lastHistoricErrors = array_slice($historicErrors, -500);
+            $lastHistoricErrors = array_slice($historicErrors, -50);
 
             if (avg($lastHistoricErrors) > avg($historicErrors)) {
                 $historicErrors = [];
                 $i = 0;
-                test($neuralNetwork);
+//                test($neuralNetwork);
 
                 $neuralNetwork->rerandomizeWeights();
 
                 test($neuralNetwork);
+                echo '<br><br>----------------------------<br><br><br>';
             }
         }
 
         $historicErrors[] = avg($errors);
 
-        if ($i == 10000) {
+        if ($i == 1000) {
             echo 'break';
             break;
         }
@@ -182,6 +187,8 @@ function test(NeuralNetwork $neuralNetwork)
         <script>draw()</script>
 
     <?php
+    flush();
+    ob_flush();
 }
 ?>
 

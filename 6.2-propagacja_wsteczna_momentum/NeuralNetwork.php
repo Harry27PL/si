@@ -9,11 +9,16 @@ class NeuralNetwork
 
     private $numberOfLayers;
 
+    private $rangeMin;
+    private $rangeMax;
+
     public function __construct($numberOfData, array $numberOfNeurons)
     {
         $this->numberOfLayers = count($numberOfNeurons);
 
         $this->numberOfData = $numberOfData;
+
+        $this->randomizeRange();
 
         for ($k = 0; $k < $this->numberOfLayers; $k++) {
 
@@ -24,8 +29,16 @@ class NeuralNetwork
             $isLast   = $k == $this->numberOfLayers - 1;
             $isHidden = !$isLast && $k;
 
-            $this->neuralNetworkLayers[] = new NeuralNetworkLayer($numberOfNeurons[$k], $numberOfNeuronData, $isLast, $isHidden);
+            $this->neuralNetworkLayers[] = new NeuralNetworkLayer($this, $numberOfNeurons[$k], $numberOfNeuronData, $isLast, $isHidden);
         }
+    }
+
+    private function randomizeRange()
+    {
+        $this->rangeMin = randFloat(-2, -1);
+        $this->rangeMax = randFloat(1, 2);
+
+        echo '<br>range: '.$this->rangeMin.', '.$this->rangeMax.'<br>';
     }
 
     public function calculate(array $data)
@@ -41,6 +54,8 @@ class NeuralNetwork
 
     public function rerandomizeWeights()
     {
+        $this->randomizeRange();
+
         foreach ($this->neuralNetworkLayers as $layer) {
 
             foreach ($layer->getNeurons() as $neuron) {
@@ -176,5 +191,15 @@ class NeuralNetwork
             'nodes' => $nodes,
             'edges' => $edges
         ];
+    }
+
+    public function getRangeMin()
+    {
+        return $this->rangeMin;
+    }
+
+    public function getRangeMax()
+    {
+        return $this->rangeMax;
     }
 }
