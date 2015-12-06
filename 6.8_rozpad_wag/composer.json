@@ -1,0 +1,8 @@
+{
+    "require": {
+        "myclabs/deep-copy": "^1.5"
+    },
+    "autoload": {
+        "psr-4": {"": "src/"}
+    }
+}

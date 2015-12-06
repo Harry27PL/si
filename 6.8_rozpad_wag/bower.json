@@ -1,0 +1,8 @@
+{
+  "name": "si",
+  "dependencies": {
+    "c3": "*",
+    "vis": "*"
+  },
+  "private": true
+}
