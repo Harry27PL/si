@@ -12,7 +12,8 @@ Game = (function(){
         for (var i = 0; i < size*size; i++)
             board.push(0);
 
-        resetView();
+        resetViewBoard();
+        resetViewPlayer();
     }
 
     $(document).ready(function(){
@@ -25,8 +26,7 @@ Game = (function(){
             return;
 
         board[position] = player;
-
-        //$(document).trigger('game.move', [player]);
+        resetViewBoard();
 
         if (isEnd()) {
             end();
@@ -34,11 +34,15 @@ Game = (function(){
             return;
         }
 
+        var previousPlayer = player;
+
         player = player == 1
             ? -1
             : 1;
 
-        resetView();
+        resetViewPlayer();
+
+        $(document).trigger('game.move', [previousPlayer]);
     }
 
     function isEnd()
@@ -80,14 +84,21 @@ Game = (function(){
             });
         };
 
-        function existsIdenticalDiagonal(matrix)
+        function existsIdenticalDiagonal(matrix, rotated)
         {
+            function index(i) {
+                if (rotated)
+                    return size - 1 - i;
+
+                return i;
+            }
+
             for (var i = 0; i < size; i++)
-                if (!matrix[i][i])
+                if (!matrix[i][index(i)])
                     return false;
 
             for (var i = 0; i < size; i++)
-                if (matrix[0][0] != matrix[i][i])
+                if (matrix[0][index(0)] != matrix[i][index(i)])
                     return false;
 
             return true;
@@ -96,7 +107,7 @@ Game = (function(){
         return existsIdenticalRows(boardMatrix)
             || existsIdenticalRows(boardMatrixT)
             || existsIdenticalDiagonal(boardMatrix)
-            || existsIdenticalDiagonal(boardMatrixT);
+            || existsIdenticalDiagonal(boardMatrix, true);
     }
 
     function getBoardAsMatrix(){
@@ -116,14 +127,17 @@ Game = (function(){
         return newBoard;
     }
 
-    function resetView()
+    function resetViewBoard()
     {
         var boardView = $('.board');
 
         boardView.find('div').each(function(i){
             $(this).attr('data-status', board[i]);
         });
+    }
 
+    function resetViewPlayer()
+    {
         $('.player').html(
             player == 1
                 ? '&times;'
@@ -132,9 +146,11 @@ Game = (function(){
     }
 
     return {
-        start:  start,
-        move:   move,
-        board:  board
+        start:      start,
+        move:       move,
+        getBoard:   function() {
+            return board;
+        }
     };
 })();
 
