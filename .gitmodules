@@ -1,0 +1,3 @@
+[submodule "FANN/fann.js"]
+	path = FANN/fann.js
+	url = https://github.com/louisstow/fann.js.git

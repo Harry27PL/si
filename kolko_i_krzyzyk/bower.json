@@ -1,0 +1,8 @@
+{
+  "name": "si",
+  "dependencies": {
+      "bootstrap": "*",
+      "underscore": "*"
+  },
+  "private": true
+}
