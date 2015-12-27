@@ -3,7 +3,8 @@
   "dependencies": {
       "bootstrap": "*",
       "c3": "*",
-      "underscore": "*"
+      "underscore": "*",
+      "synaptic": "*"
   },
   "private": true
 }

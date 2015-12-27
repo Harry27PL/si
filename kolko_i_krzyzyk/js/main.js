@@ -1,30 +1,40 @@
 function AI()
 {
     var historicMoves = [];
+    var goodHistoricMoves = [];
     var NN = generateNetwork();
 
     function generateNetwork()
     {
-        var NN = FANN.create([9, 4, 9]);
-        NN.set_activation_function_hidden(FANN.SIGMOID_SYMMETRIC);
-        NN.set_activation_function_output(FANN.SIGMOID);
+        var inputLayer = new Layer(9);
+        var hiddenLayer = new Layer(1);
+        var outputLayer = new Layer(9);
 
-        NN.randomize_weights(-Math.random(), Math.random());
+        inputLayer.project(hiddenLayer);
+        hiddenLayer.project(outputLayer);
 
-        return NN;
+        var myNetwork = new Network({
+            input: inputLayer,
+            hidden: [hiddenLayer],
+            output: outputLayer
+        });
+
+        myNetwork.activate(Game.getBoard())
+
+        return myNetwork;
     }
 
     this.getResult = function()
     {
         var board  = Game.getBoard();
 
-        return NN.run(board);
+        return NN.activate(board);
     }
 
     this.getMove = function()
     {
         var board  = Game.getBoard();
-        var result = NN.run(board);
+        var result = NN.activate(board);
 
         var position = (function(){
             while (true) {
@@ -63,22 +73,18 @@ function AI()
 
     this.train = function()
     {
-        for (var i in historicMoves) {
-            NN.train(historicMoves[i].input, historicMoves[i].decision);
-        }
+        goodHistoricMoves = goodHistoricMoves.concat(historicMoves);
 
+        for (var i in historicMoves) {
+            NN.activate(historicMoves[i].input);
+            NN.propagate(0.3, historicMoves[i].decision);
+        }
     };
 
     this.resetHistoricMoves = function()
     {
         historicMoves = [];
     }
-};
-
-FANN_ready = function() {
-
-//    startGame();
-
 };
 
 var historicWinners = [];
@@ -99,9 +105,7 @@ function startGame()
     var randomAI  = new AI();
     var currentPlayer = 1;
 
-    while (totalGames < 50) {
-
-        console.log(totalGames)
+    while (totalGames < 2000) {
 
         var currentAI = currentPlayer == 1
             ? randomAI
@@ -134,10 +138,11 @@ function startGame()
 ////                }
 //            }
 
-            randomAI = new AI();
-
             currentPlayer = 1;
 
+            randomAI = new AI();
+
+            console.log(totalGames)
             totalGames++;
 
         } else {
@@ -186,6 +191,9 @@ function resetGraph()
         var data = [name];
 
         for (var k in historicWinners) {
+
+            if (k % 20)
+                continue;
 
             var total = historicWinners.filter(function(value, index){
                 return index <= k && value == player;

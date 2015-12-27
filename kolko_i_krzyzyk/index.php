@@ -13,8 +13,9 @@
         <script type="text/javascript" src="bower_components/underscore/underscore.js"></script>
         <script type="text/javascript" src="bower_components/d3/d3.min.js"></script>
         <script type="text/javascript" src="bower_components/c3/c3.min.js"></script>
+        <script type="text/javascript" src="bower_components/synaptic/dist/synaptic.js"></script>
         <script type="text/javascript" src="js/functions.js"></script>
-        <script type="text/javascript" src="js/fann.js"></script>
+        <!--<script type="text/javascript" src="js/fann.js"></script>-->
         <script type="text/javascript" src="js/game.js"></script>
         <script type="text/javascript" src="js/main.js"></script>
     </head>
