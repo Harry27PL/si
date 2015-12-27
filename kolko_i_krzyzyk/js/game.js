@@ -9,11 +9,15 @@ Game = (function(){
     {
         board = [];
 
+        player = 1;
+
         for (var i = 0; i < size*size; i++)
             board.push(0);
 
         resetViewBoard();
         resetViewPlayer();
+
+        $(document).trigger('game.start');
     }
 
     $(document).ready(function(){
@@ -29,9 +33,7 @@ Game = (function(){
         resetViewBoard();
 
         if (isEnd()) {
-            end();
-
-            return;
+            return end();
         }
 
         var previousPlayer = player;
@@ -43,6 +45,8 @@ Game = (function(){
         resetViewPlayer();
 
         $(document).trigger('game.move', [previousPlayer]);
+
+        return null;
     }
 
     function isEnd()
@@ -57,12 +61,22 @@ Game = (function(){
 
     function end()
     {
-        if (existsCompletedRow())
-            alert('wygrywa '+player);
-        else
-            alert('remis');
+        var tie = !existsCompletedRow();
+
+//        if (!tie)
+//            alert('wygrywa '+player);
+//        else
+//            alert('remis');
+
+        var winner = !tie
+            ? player
+            : 0;
+
+        $(document).trigger('game.end', [winner]);
 
         start();
+
+        return winner;
     }
 
     function existsCompletedRow()
@@ -150,7 +164,8 @@ Game = (function(){
         move:       move,
         getBoard:   function() {
             return board;
-        }
+        },
+        existsCompletedRow: existsCompletedRow
     };
 })();
 
