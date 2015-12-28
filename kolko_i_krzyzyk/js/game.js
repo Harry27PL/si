@@ -159,13 +159,26 @@ Game = (function(){
         );
     }
 
+    function getFreePositions()
+    {
+        var result = [];
+
+        for (var k in board) {
+            if (!board[k])
+                result.push(k);
+        }
+
+        return result;
+    }
+
     return {
         start:      start,
         move:       move,
         getBoard:   function() {
             return board;
         },
-        existsCompletedRow: existsCompletedRow
+        existsCompletedRow: existsCompletedRow,
+        getFreePositions: getFreePositions
     };
 })();
 

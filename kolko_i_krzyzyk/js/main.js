@@ -6,8 +6,13 @@ function AI()
 
     function generateNetwork()
     {
+        if ($('[data-network-data]').val())
+            return Network.fromJSON(
+                JSON.parse($('[data-network-data]').val())
+            );
+
         var inputLayer = new Layer(9);
-        var hiddenLayer = new Layer(1);
+        var hiddenLayer = new Layer(2);
         var outputLayer = new Layer(9);
 
         inputLayer.project(hiddenLayer);
@@ -22,6 +27,13 @@ function AI()
         myNetwork.activate(Game.getBoard())
 
         return myNetwork;
+    }
+
+    this.export = function()
+    {
+        $('[data-network-data]').val(
+            JSON.stringify(NN.toJSON())
+        );
     }
 
     this.getResult = function()
@@ -85,11 +97,24 @@ function AI()
     {
         historicMoves = [];
     }
+
+    this.getNN = function()
+    {
+        return NN;
+    }
 };
 
 var historicWinners = [];
 
-var toTrainAI;
+var mainAI;
+
+$(document).ready(function(){
+    mainAI = new AI();
+});
+
+$(document).on('blur', '[data-network-data]', function(){
+    mainAI = new AI();
+});
 
 $(document).on('click', '[data-action="start"]', function(){
     startGame();
@@ -98,51 +123,32 @@ $(document).on('click', '[data-action="start"]', function(){
 function startGame()
 {
     var totalGames = 0;
+    var limit = $('[data-training-steps]').val();
 
-    if (!toTrainAI)
-        toTrainAI = new AI();
-
-    var randomAI  = new AI();
     var currentPlayer = 1;
 
-    while (totalGames < 2000) {
+    while (totalGames < limit) {
 
-        var currentAI = currentPlayer == 1
-            ? randomAI
-            : toTrainAI;
+        var newMove = currentPlayer == 1
+            ? (function(){
+                var freePositions = Game.getFreePositions();
+                return freePositions[Math.round(random() * (freePositions.length - 1))]
+            })()
+            : mainAI.getMove();
 
-        var winner = Game.move(currentAI.getMove());
+        var winner = Game.move(newMove);
 
         if (winner !== null) {
 
             if (winner == -1) {
-                toTrainAI.train();
+                mainAI.train();
             }
 
-            toTrainAI.resetHistoricMoves();
-
-//            if (totalGames % 100 == 0) {
-//                var avg = (function(){
-//                    var last = _.last(historicWinners, 100);
-//
-//                    var sum = last.reduce(function(previousValue, currentValue) {
-//                        return previousValue + currentValue;
-//                    });
-//
-//                    return sum / last.length;
-//                })();
-//
-////                if (avg > 0) {
-////                    console.log('resetuję')
-////                    toTrainAI = new AI();
-////                }
-//            }
+            mainAI.resetHistoricMoves();
 
             currentPlayer = 1;
 
-            randomAI = new AI();
-
-            console.log(totalGames)
+            console.log(Math.round(totalGames / limit * 100)+'%')
             totalGames++;
 
         } else {
@@ -152,6 +158,8 @@ function startGame()
         }
 
     }
+
+    mainAI.export();
 
     resetGraph();
 }
@@ -189,10 +197,11 @@ function resetGraph()
     function getData(name, player)
     {
         var data = [name];
+        var step = Math.round(historicWinners.length / 100)
 
         for (var k in historicWinners) {
 
-            if (k % 20)
+            if (k % step)
                 continue;
 
             var total = historicWinners.filter(function(value, index){
@@ -230,7 +239,7 @@ $(document).on('click', '.board div', function(){
     var winner = Game.move($(this).index());
 
     if (winner === null) {
-        Game.move(toTrainAI.getMove());
+        Game.move(mainAI.getMove());
     }
 
 });

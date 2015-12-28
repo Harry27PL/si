@@ -61,7 +61,13 @@
             </div>
 
             <div class="game-head-buttons">
+                <input type="text" value="1000" class="form-control" data-training-steps>
                 <button class="btn btn-default" data-action="start">Start</button>
+            </div>
+
+            <div class="game-head-data">
+                <label>Baza:</label>
+                <textarea class="form-control" rows="6" cols="50" data-network-data></textarea>
             </div>
 
         </div>

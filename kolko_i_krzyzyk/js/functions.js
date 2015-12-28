@@ -19,3 +19,8 @@ function print_r(o)
     }
     return f(o, '', '');
 }
+
+function random()
+{
+    return window.crypto.getRandomValues(new Uint16Array(1)) / 65536;
+}

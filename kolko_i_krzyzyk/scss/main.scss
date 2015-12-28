@@ -81,7 +81,11 @@ body {
         }
 
         &-buttons {
+            input, button {
+                width: 100px;
+            }
 
+            padding-right: 50px;
         }
     }
 

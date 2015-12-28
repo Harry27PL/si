@@ -51,6 +51,10 @@ body {
     position: relative;
     top: -55px;
     padding: 0px 50px; }
+  .game-head-buttons {
+    padding-right: 50px; }
+    .game-head-buttons input, .game-head-buttons button {
+      width: 100px; }
 .game-graph {
   margin: 50px;
   height: 200px; }
