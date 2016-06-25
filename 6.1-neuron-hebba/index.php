@@ -12,7 +12,7 @@ function start()
 
     $trainingDatas = [
         new TrainingData([-1, -1, 1, -1, -1, 1, -1, -1, 1, -1, -1, 1], -1),
-        new TrainingData([1, -1, 1, 1, 1, 1, 1, -1 -1, 1, -1, -1, 1], 1),
+        new TrainingData([1, -1, 1, 1, 1, 1, 1, -1, -1, 1, -1, -1, 1], 1),
     ];
 
     learn($neuron, $trainingDatas);
